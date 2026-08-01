@@ -63,11 +63,11 @@ def predict_product_price():
 
 # Define an endpoint for batch prediction (POST request)
 @superkart_predictor_api.post('/v1/batchproducts')
-def predict_rental_price_batch():
+def predict_batch_products_price():
     """
     This function handles POST requests to the '/v1/batchproducts' endpoint.
     It expects a CSV file containing property details for multiple properties
-    and returns the predicted rental prices as a dictionary in the JSON response.
+    and returns the predicted product prices as a dictionary in the JSON response.
     """
     # Get the uploaded CSV file from the request
     file = request.files['file']
