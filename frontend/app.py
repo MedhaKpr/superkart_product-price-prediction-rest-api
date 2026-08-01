@@ -24,7 +24,7 @@ if option == "Single Product Prediction":
         product_mrp = st.number_input("Product MRP ($)", min_value=0.0, value=150.0)
         product_allocated_area = st.number_input("Allocated Area Ratio", min_value=0.0, max_value=1.0, value=0.05)
         #product_type = st.selectbox("Product Type", ["Fruits and Vegetables", "Snack Foods", "Household", "Frozen Foods", "Dairy", "Canned", "Baking Goods", "Health and Hygiene", "Soft Drinks", "Meat", "Breads", "Hard Drinks", "Others", "Starchy Foods", "Breakfast", "Seafood"])
-        product_type_category = st.selectbox("Product Type", ["Perishables","Non Perishables"])
+        product_type_category = st.selectbox("Product Type Category", ["Perishables","Non Perishables"])
         Product_Id_char = st.selectbox("Product ID", ["FD","DR","NC"])
 
     with col2:
