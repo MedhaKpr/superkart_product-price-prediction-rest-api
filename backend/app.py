@@ -3,13 +3,13 @@ import numpy as np
 import joblib  # For loading the serialized model
 import pandas as pd  # For data manipulation
 from flask import Flask, request, jsonify  # For creating the Flask API
-from flask_cors import CORS
+#from flask_cors import CORS
 
 # Initialize the Flask application
 superkart_predictor_api = Flask("SuperKart Price Predictor")
-CORS(superkart_predictor_api)
+#CORS(superkart_predictor_api)
 
-print("Flask app 'superkart_predictor_api' initialized and CORS enabled.")
+#print("Flask app 'superkart_predictor_api' initialized and CORS enabled.")
 
 # Load the trained machine learning model
 model = joblib.load("superkart_model.joblib")
@@ -47,7 +47,7 @@ def predict_product_price():
         'Product_Type_Category': property_data.get('Product_Type_Category', 'Other'),
         'Product_Id_char': property_data['Product_Id_char']
     }
-    
+
     # Convert the extracted data into a Pandas DataFrame
     input_data = pd.DataFrame([sample])
 
