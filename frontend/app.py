@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import requests
+from datetime import datetime
+
 
 # Base URL of the Flask backend
 BACKEND_URL = "http://backend:7860"
@@ -10,7 +12,7 @@ st.title("🛒 SuperKart Product Sales Prediction")
 
 # Sidebar for navigation
 option = st.sidebar.selectbox("Choose Prediction Type", ["Single Product Prediction", "Batch Prediction (CSV)"])
-
+currentYear = datetime.now().year
 if option == "Single Product Prediction":
     st.subheader("Enter Product and Store Details")
     
@@ -21,30 +23,35 @@ if option == "Single Product Prediction":
         product_sugar = st.selectbox("Sugar Content", ["Low Sugar", "Regular", "No Sugar"])
         product_mrp = st.number_input("Product MRP ($)", min_value=0.0, value=150.0)
         product_allocated_area = st.number_input("Allocated Area Ratio", min_value=0.0, max_value=1.0, value=0.05)
-        product_type = st.selectbox("Product Type", ["Fruits and Vegetables", "Snack Foods", "Household", "Frozen Foods", "Dairy", "Canned", "Baking Goods", "Health and Hygiene", "Soft Drinks", "Meat", "Breads", "Hard Drinks", "Others", "Starchy Foods", "Breakfast", "Seafood"])
+        #product_type = st.selectbox("Product Type", ["Fruits and Vegetables", "Snack Foods", "Household", "Frozen Foods", "Dairy", "Canned", "Baking Goods", "Health and Hygiene", "Soft Drinks", "Meat", "Breads", "Hard Drinks", "Others", "Starchy Foods", "Breakfast", "Seafood"])
+        product_type_category = st.selectbox("Product Type", ["Perishables","Non Perishables"])
+        Product_Id_char = st.selectbox("Product ID", ["FD","DR","NC"])
 
     with col2:
-        store_establishment_year = st.number_input("Store Establishment Year", min_value=1980, max_value=2024, value=2000)
+        store_establishment_year = st.number_input("Store Establishment Year", min_value=1980, max_value=currentYear, value=2000)
         store_size = st.selectbox("Store Size", ["Medium", "Small", "High"])
         store_location = st.selectbox("Store Location (City Type)", ["Tier 1", "Tier 2", "Tier 3"])
-        store_type = st.selectbox("Store Type", ["Supermarket Type1", "Supermarket Type2", "Departmental Store", "Food Mart"])
+        store_type = st.selectbox("Store Type", ["Supermarket Type1", "Supermarket Type2", "Supermarket Type3","Departmental Store", "Food Mart"])
 
     # The backend handles feature engineering, but we send the raw inputs as expected by our app.py logic
     payload = {
         "Product_Weight": product_weight,
         "Product_Sugar_Content": product_sugar,
         "Product_Allocated_Area": product_allocated_area,
-        "Product_Type": product_type,
+        "Product_Type_Category": product_type_category,
         "Product_MRP": product_mrp,
-        "Store_Establishment_Year": store_establishment_year,
+        "Store_Age_Years":currentYear-store_establishment_year,
         "Store_Size": store_size,
         "Store_Location_City_Type": store_location,
-        "Store_Type": store_type
+        "Store_Type": store_type,
+        "Product_Id_char": Product_Id_char
     }
+
 
     if st.button("Predict Sales", type="primary"):
         with st.spinner('Calculating...'):
             try:
+                print(payload)
                 response = requests.post(f"{BACKEND_URL}/v1/product", json=payload)
                 if response.status_code == 200:
                     prediction = response.json().get('Predicted Price (in dollars)', 'N/A')
